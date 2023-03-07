@@ -1,0 +1,18 @@
+# 订阅组 文件只会广播到订阅了相同组别的节点上
+subscribe_name: file_sync
+# 文件保存目录
+save_path: ./
+# 十六进制ecc密钥 曲线统一P256
+pri_key: 307702010104202eddbeb699068950e76d9cc715f1f726d9bfd47b22ebaeb8b9e1cd53b285d8a3a00a06082a8648ce3d030107a14403420004730660cf524e8e24b8801aa28219a9bb181fad5ee262f976212dab21e3326aac816b3cfc0a326debb5684bc08d8e489bdeeb2646b1f89bf6d769763d3be30606
+# 节点id 与密钥有关
+node_id: QmceARpbvtRXSSwsJP2FWhw6wEXfzHXkd9Deex28QXXfRT
+# p2p端口
+port: 8006
+# 同步间隔 单位毫秒
+interval: 6000
+# 要连接的p2p邻居节点
+peers:
+ - /ip4/192.168.10.116/tcp/8006/p2p/QmepHNve2ZNYxeu7AXbjo9awjZaEHPvwqQk2jpvDoH6gYi
+# 需要同步的文件列表文件名
+sync_file:
+ - sync_hello.txt
