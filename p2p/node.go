@@ -103,6 +103,8 @@ func (n *Node) PublishFile(globalConfig config.FileSyncConfig) {
 				// continue
 				return
 			}
+			// todo 定义一个结构 包含name content 存取时使用(un)marshal即可
+
 			// 自行组装发送文件格式 [offset-表示文件名长度偏移量]-[syncFilenameBytes-文件名转bytes]-[fileContent-文件内容bytes]
 			offset := []byte{uint8(len([]byte(syncFile)))}
 			content := append(offset, []byte(syncFile)...)
@@ -134,19 +136,24 @@ func (n *Node) SaveFile(globalConfig config.FileSyncConfig) {
 
 		// 获取文件名偏移量
 		offset := m.Message.Data[0]
+		// 避免其它节点不按照PublishFile中的格式（[filename_offset-filename-file_content]）发布内容
+		if int(offset+1) >= len(m.Message.Data) {
+			log.Println("receive something not file:", string(m.Message.Data))
+			continue
+		}
 		// 根据偏移量取得文件名
 		filename := string(m.Message.Data[1 : offset+1])
 		wfile, err := os.OpenFile(path.Join(globalConfig.SavePath, filename), os.O_CREATE|os.O_RDWR, 0644)
 		if err != nil {
-			log.Println("save file open", err)
-			return
+			log.Println("save file open failed", err)
+			continue
 		}
 		// 写文件
 		_, err = wfile.Write(m.Message.Data[offset+1:])
 		if err != nil {
 			log.Println("save file failed", err)
 			_ = wfile.Close()
-			return
+			continue
 		}
 		log.Println("save file success", filename)
 		_ = wfile.Close()
